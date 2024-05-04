@@ -20,9 +20,18 @@ func NewGymService(repo repository.GymerRepository, log *zap.Logger) Gymer {
 }
 
 func (s *GymService) ListGyms(ctx context.Context) ([]models.Gym, error) {
-	return s.repo.ListGyms(ctx)
+	gyms, err := s.repo.ListGyms(ctx)
+	if err != nil {
+		s.log.Error("Error listing gyms", zap.Error(err))
+	}
+	return gyms, err
 }
 
 func (s *GymService) GetSchedulesForGym(ctx context.Context, gymID int) ([]models.Schedules, error) {
-	return s.repo.GetSchedulesForGym(ctx, gymID)
+	schedules, err := s.repo.GetSchedulesForGym(ctx, gymID)
+	if err != nil {
+		s.log.Error("Error getting gym schedules", zap.Error(err))
+		return nil, err
+	}
+	return schedules, err
 }
