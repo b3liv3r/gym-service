@@ -1,0 +1,28 @@
+services:
+  db_gym:
+    image: postgres
+    restart: always
+    volumes:
+      - ./modules/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: postgres
+    networks:
+      - default
+
+  gym:
+    build: ./
+    ports:
+      - 30004:30004
+    depends_on:
+      - db_gym
+    networks:
+      - skynet
+      - default
+
+networks:
+  skynet:
+    external: true
+  default:
+    external: false
